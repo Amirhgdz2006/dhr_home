@@ -3,13 +3,13 @@
   "private": true,
   "workspaces": [
     "apps/backend",
-    "apps/dhr_home"
+    "apps/frontend"
   ],
   "devDependencies": {
     "concurrently": "^8.0.0"
   },
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=dhr_home\""
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\""
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
