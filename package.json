@@ -1,0 +1,20 @@
+{
+  "name": "dhr_home_my_backend",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/dhr_home"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=dhr_home\""
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.3"
+  }
+}
