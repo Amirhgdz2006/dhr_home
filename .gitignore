@@ -1,3 +1,7 @@
 node_modules/
 env/
 __pycache__/
+
+
+.nx/cache
+.nx/workspace-data
