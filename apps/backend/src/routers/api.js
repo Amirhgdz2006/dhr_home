@@ -67,6 +67,7 @@ router.get('/data', checkOrigin, async (req, res) => {
 
 
 // App Endpoint
+// CREATE
 router.post('/app', auth, async function(req, res) {
   try {
     const app = new App(req.body);
@@ -78,8 +79,7 @@ router.post('/app', auth, async function(req, res) {
   }
 });
 
-
-
+// UPDATE
 router.put('/app/:id', auth, async function(req, res) {
   try {
     const appId = req.params.id;
@@ -101,7 +101,7 @@ router.put('/app/:id', auth, async function(req, res) {
 });
 
 
-
+// DELETE
 router.delete('/app/:id', auth, async (req, res) => {
   try {
     const appId = req.params.id;
@@ -123,6 +123,7 @@ router.delete('/app/:id', auth, async (req, res) => {
 
 
 // Category Endpoint
+// CREATE
 router.post('/category', auth, async function(req, res){
   try{
     const category = new Category(req.body)
@@ -139,7 +140,7 @@ module.exports = router;
 
 
 
-
+// UPDATE
 router.put('/category/:id', auth, async function(req, res) {
   try {
     const categoryId = req.params.id;
@@ -162,7 +163,7 @@ router.put('/category/:id', auth, async function(req, res) {
 
 
 
-
+// DELETE
 router.delete('/category/:id', auth, async (req, res) => {
   try {
     const categoryId = req.params.id;
