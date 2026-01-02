@@ -7,8 +7,19 @@ import authRoutes from './routes/auth';
 import path from 'path';
 import cors from 'cors';
 import errorHandler from './middleware/errorHandler';
+import hpp from 'hpp';
+import helmet from 'helmet';
+import mongoose from 'mongoose';
+import fs from 'fs';
 
 const app = express();
+
+// Security Middlewares
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginEmbedderPolicy: false,
+}));
+app.use(hpp());
 
 // CORS configuration
 const allowedOrigins: string[] =
@@ -30,13 +41,42 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Health check endpoint - checks MongoDB connection
+app.get('/health', (req: Request, res: Response) => {
+  const dbState = mongoose.connection.readyState;
+  // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+  if (dbState === 1) {
+    res.status(200).json({
+      status: 'ok',
+      database: 'connected',
+      timestamp: new Date().toISOString(),
+    });
+  } else {
+    res.status(503).json({
+      status: 'error',
+      database: 'disconnected',
+      readyState: dbState,
+      timestamp: new Date().toISOString(),
+    });
+  }
+});
+
 // Routers
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-app.use('/background', express.static(path.join(__dirname, '..', 'background')));
+
+// Serve all static files from the uploads folder
+const uploadsPath = path.resolve(process.cwd(), 'uploads');
+
+if (!fs.existsSync(uploadsPath)) {
+  console.error('Uploads folder not found:', uploadsPath);
+} else {
+  console.log('Uploads folder loaded from:', uploadsPath);
+}
+
+app.use('/uploads', express.static(uploadsPath));
+
 
 // 404 Handler
 app.use((req: Request, res: Response) => {

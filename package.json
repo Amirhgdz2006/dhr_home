@@ -7,15 +7,21 @@
   ],
   "devDependencies": {
     "concurrently": "^8.0.0",
-    "nx": "22.3.3"
+    "nx": "22.3.3",
+    "wait-on": "^9.0.3"
   },
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\""
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"wait-on http://localhost:1338/health && npm run dev --workspace=frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
     "zod": "^4.3.2"
