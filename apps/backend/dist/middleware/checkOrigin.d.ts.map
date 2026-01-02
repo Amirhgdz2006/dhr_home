@@ -1,0 +1,1 @@
+{"version":3,"file":"checkOrigin.d.ts","sourceRoot":"","sources":["../../src/middleware/checkOrigin.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAI1D,MAAM,CAAC,OAAO,UAAU,WAAW,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ,EAAE,IAAI,EAAE,YAAY,GAAG,IAAI,CAgBzF"}
