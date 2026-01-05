@@ -10,10 +10,9 @@
     "log-api": "node scripts/log-api.js"
   },
   "dependencies": {
-    "@sentry/react": "^8.0.0",
-    "motion": "^11.11.17",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "motion": "^11.11.17"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
@@ -24,8 +23,6 @@
     "postcss": "^8.5.6",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.17",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
     "vite": "^6.3.5"
   }
 }

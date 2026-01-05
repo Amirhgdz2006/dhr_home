@@ -7,7 +7,7 @@ import authRoutes from './routes/auth';
 import path from 'path';
 import cors from 'cors';
 import errorHandler from './middleware/errorHandler';
-import hpp from 'hpp';
+const hpp: any = require('hpp');
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import fs from 'fs';

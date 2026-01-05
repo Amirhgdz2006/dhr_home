@@ -1,5 +1,5 @@
 {
-  "name": "dhr_home_my_backend",
+  "name": "dhr_home",
   "private": true,
   "workspaces": [
     "apps/backend",
@@ -8,6 +8,8 @@
   "devDependencies": {
     "concurrently": "^8.0.0",
     "nx": "22.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
     "wait-on": "^9.0.3"
   },
   "scripts": {
@@ -26,6 +28,6 @@
     "hpp": "^0.2.3",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
-    "zod": "^4.3.2"
+    "zod": "^3.22.4"
   }
 }
