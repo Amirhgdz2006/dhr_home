@@ -1,35 +1,39 @@
-import dotenv from 'dotenv';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 
-dotenv.config();
+export default defineConfig(({ mode }) => {
+  // Load env variables based on current mode (development / production)
+  const env = loadEnv(mode, process.cwd(), '');
 
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  server: {
-    port: Number(process.env.PORT) || 3000,
-    host: process.env.HOST,
-    open: true,
-    proxy: {
-      '/api': {
-        target: process.env.VITE_BACKEND_URL,
-        changeOrigin: true,
-        secure: false,
+  const backendTarget = env.VITE_BACKEND_URL || 'http://localhost:1338';
+
+  return {
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
       },
     },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
+    server: {
+      port: Number(env.PORT) || 3000,
+      host: env.HOST || '0.0.0.0',
+      open: true,
+      proxy: {
+        '/api': {
+          target: backendTarget,
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
-  },
-  publicDir: 'public',
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
+    publicDir: 'public',
+  };
 });

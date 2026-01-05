@@ -1,57 +1,41 @@
-// import { Category } from "./types";
-
-// /**
-//  * Category definitions
-//  * Add or remove categories here
-//  * The order property determines the display order (lower numbers appear first)
-//  */
-// export const categories: Category[] = [
-//   { id: "پلتفرم‌ها", name: "پلتفرم‌ها", order: 1 },
-//   { id: "ابزارها", name: "ابزارها", order: 2 },
-//   { id: "مستندات", name: "مستندات", order: 3 },
-//   { id: "ارتباطات داخلی", name: "ارتباطات داخلی", order: 4 },
-//   { id: "درخواست‌های اداری", name: "درخواست‌های اداری", order: 5 },
-// ];
-
-// /**
-//  * Get category names in order
-//  */
-// export function getCategoryNames(): string[] {
-//   return categories
-//     .sort((a, b) => (a.order || 999) - (b.order || 999))
-//     .map(cat => cat.name);
-// }
-
-// /**
-//  * Check if a category exists
-//  */
-// export function isValidCategory(categoryName: string): boolean {
-//   return categories.some(cat => cat.name === categoryName);
-// }
-
-
-
-// ---------------------------------------------------------------------
 import { Category } from "./types";
 import { fetchCategoriesFromStrapi } from "./api";
 
+/**
+ * Categories data store
+ * Categories are loaded from the backend API via fetchCategoriesFromStrapi()
+ */
 export let categories: Category[] = [];
 
-// Load categories from Strapi
-export async function loadCategories() {
-  categories = await fetchCategoriesFromStrapi();
+/**
+ * Load categories from backend API
+ * Updates the categories store with fetched data
+ */
+export async function loadCategories(): Promise<void> {
+  try {
+    categories = await fetchCategoriesFromStrapi();
+  } catch (error) {
+    console.error("Failed to load categories:", error);
+    categories = [];
+  }
 }
 
-
-// Get category names in order
+/**
+ * Get category names sorted by order
+ * Categories with lower order values appear first
+ * @returns Array of category names in order
+ */
 export function getCategoryNames(): string[] {
   return categories
-    .sort((a, b) => (a.order || 999) - (b.order || 999))
-    .map(cat => cat.name);
+    .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+    .map((cat) => cat.name);
 }
 
-
-// Check if a category exists
+/**
+ * Check if a category exists
+ * @param categoryName - The category name to check
+ * @returns True if category exists, false otherwise
+ */
 export function isValidCategory(categoryName: string): boolean {
-  return categories.some(cat => cat.name === categoryName);
+  return categories.some((cat) => cat.name === categoryName);
 }

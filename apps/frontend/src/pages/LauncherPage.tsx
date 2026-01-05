@@ -4,28 +4,34 @@ import { motion, AnimatePresence } from "motion/react";
 import { AppData, Category } from "../data/types";
 import { getCategoryNames } from "../data/categories";
 import { useInstallPrompt } from "../hooks/useInstallPrompt";
+import { BREAKPOINTS, TIMING, IMAGE_ANALYSIS, URLS, KEYBOARD_SHORTCUTS, DEFAULTS, LAYOUT } from "../constants";
 
-
-const ICON_BASE = import.meta.env.VITE_BACKEND_URL;
-function resolveIconUrl(url: string) {
+/**
+ * Resolve icon URL - handles both absolute and relative URLs
+ * @param url - Icon URL (can be absolute or relative)
+ * @returns Resolved icon URL
+ */
+function resolveIconUrl(url: string): string {
   if (!url) return "";
-  return url.startsWith("http") ? url : `${ICON_BASE}${url}`;
+  const iconBase = import.meta.env.VITE_BACKEND_URL;
+  return url.startsWith("http") ? url : `${iconBase}${url}`;
 }
 
-
-// Hook to detect mobile screen size
-function useIsMobile() {
+/**
+ * Hook to detect mobile screen size
+ * @returns True if screen width is below mobile breakpoint
+ */
+function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(() => {
-    // Check on initial render
     if (typeof window !== 'undefined') {
-      return window.innerWidth < 768;
+      return window.innerWidth < BREAKPOINTS.MOBILE;
     }
     return false;
   });
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < BREAKPOINTS.MOBILE);
     };
 
     checkMobile();
@@ -36,7 +42,12 @@ function useIsMobile() {
   return isMobile;
 }
 
-// Hook to analyze background image and determine color scheme
+/**
+ * Hook to analyze background image and determine color scheme
+ * Analyzes image brightness to adapt UI colors for better contrast
+ * @param imageSrc - Source URL of the background image
+ * @returns Color scheme object with adaptive colors
+ */
 function useAdaptiveColors(imageSrc: string) {
   const [isLight, setIsLight] = useState(false);
   const [isAnalyzed, setIsAnalyzed] = useState(false);
@@ -85,7 +96,7 @@ function useAdaptiveColors(imageSrc: string) {
         }
 
         // Sample a smaller area for performance (center region)
-        const sampleSize = 200;
+        const sampleSize = IMAGE_ANALYSIS.SAMPLE_SIZE;
         canvas.width = sampleSize;
         canvas.height = sampleSize;
         
@@ -113,22 +124,19 @@ function useAdaptiveColors(imageSrc: string) {
         let totalBrightness = 0;
         let pixelCount = 0;
 
-        // Sample more pixels for better accuracy (every 8th pixel in RGBA)
-        for (let i = 0; i < data.length; i += 32) {
+        // Sample pixels for better accuracy
+        // Luminance formula: (R * 299 + G * 587 + B * 114) / 1000
+        for (let i = 0; i < data.length; i += IMAGE_ANALYSIS.PIXEL_SAMPLE_INTERVAL) {
           const r = data[i];
           const g = data[i + 1];
           const b = data[i + 2];
-          // Calculate perceived brightness using luminance formula
           const brightness = (r * 299 + g * 587 + b * 114) / 1000;
           totalBrightness += brightness;
           pixelCount++;
         }
 
         const averageBrightness = totalBrightness / pixelCount;
-        // Use a lower threshold to better detect light backgrounds
-        // If average brightness is above 100, consider it light
-        // This ensures even moderately light backgrounds are detected
-        const isLightBackground = averageBrightness > 100;
+        const isLightBackground = averageBrightness > IMAGE_ANALYSIS.BRIGHTNESS_THRESHOLD;
         setIsLight(isLightBackground);
         setIsAnalyzed(true);
       } catch (error) {
@@ -238,18 +246,17 @@ function Searchbox({
 
   // Auto-focus on mount
   useEffect(() => {
-    // Small delay to ensure the component is fully rendered
     const timer = setTimeout(() => {
       inputRef.current?.focus();
-    }, 100);
+    }, TIMING.AUTO_FOCUS_DELAY);
     return () => clearTimeout(timer);
   }, []);
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
-    // Handle Cmd+A / Ctrl+A
-    if ((e.metaKey || e.ctrlKey) && e.key === "a") {
+    // Handle Cmd+A / Ctrl+A to select all text
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === KEYBOARD_SHORTCUTS.SELECT_ALL) {
       e.preventDefault();
       inputRef.current?.select();
     }
@@ -708,12 +715,11 @@ function MobileSearchBar({
   // Scroll to top when search query changes
   useEffect(() => {
     if (scrollContainerRef.current) {
-      // Always scroll to top when search changes (even if empty)
       setTimeout(() => {
         if (scrollContainerRef.current) {
           scrollContainerRef.current.scrollTop = 0;
         }
-      }, 50);
+      }, TIMING.SCROLL_TO_TOP_DELAY);
     }
   }, [searchQuery]);
 
@@ -750,9 +756,9 @@ function MobileSearchBar({
     >
       {/* Zigo Button - Left side */}
       <button
-        onClick={() => {
-          window.location.href = 'https://dhr.digikala.com/apps/zigo';
-        }}
+          onClick={() => {
+            window.location.href = URLS.ZIGO_APP;
+          }}
         className="shrink-0 flex items-center justify-center"
         style={{
           width: '48px',
@@ -931,7 +937,7 @@ function ApplicationsGrid({ imageSrc, apps, categories }: { imageSrc: string; ap
 
         scrollTimeoutRef.current = setTimeout(() => {
           setIsScrollbarVisible(false);
-        }, 1000);
+        }, TIMING.SCROLLBAR_HIDE_DELAY);
       }
     };
 
@@ -1210,7 +1216,7 @@ function ApplicationsGrid({ imageSrc, apps, categories }: { imageSrc: string; ap
                                   // Add a small delay to prevent flickering when moving between apps
                                   hoverTimeoutRef.current = setTimeout(() => {
                                     setHoveredApp(null);
-                                  }, 100);
+                                  }, TIMING.HOVER_DELAY);
                                 }}
                                 colors={colors}
                               />
@@ -1276,7 +1282,7 @@ function ApplicationsGrid({ imageSrc, apps, categories }: { imageSrc: string; ap
           }}
           onClick={() => {
             if (!hoveredApp) {
-              window.location.href = 'https://dhr.digikala.com/apps/zigo';
+              window.location.href = URLS.ZIGO_APP;
             }
           }}
         >
@@ -1308,7 +1314,7 @@ function ApplicationsGrid({ imageSrc, apps, categories }: { imageSrc: string; ap
                 }
                 hoverTimeoutRef.current = setTimeout(() => {
                   setHoveredApp(null);
-                }, 100);
+                }, TIMING.HOVER_DELAY);
               }}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -1517,7 +1523,7 @@ export default function LauncherPage({ apps, categories }: { apps: AppData[]; ca
 
   useEffect(() => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL; 
-    const imageUrl = `${backendUrl}/uploads/background.png`;
+    const imageUrl = `${backendUrl}${URLS.BACKGROUND_IMAGE_PATH}`;
 
     const img = new Image();
     img.src = imageUrl;
@@ -1542,9 +1548,9 @@ export default function LauncherPage({ apps, categories }: { apps: AppData[]; ca
   // Keyboard shortcut handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === KEYBOARD_SHORTCUTS.SEARCH) {
         e.preventDefault();
-        window.location.href = 'https://dhr.digikala.com/apps/zigo';
+        window.location.href = URLS.ZIGO_APP;
       }
     };
 
@@ -1555,10 +1561,10 @@ export default function LauncherPage({ apps, categories }: { apps: AppData[]; ca
   }, []);
 
 
-  // viewport calculation
+  // Viewport height calculation for mobile browsers
   useEffect(() => {
     const setScreenHeight = () => {
-      const vh = window.innerHeight * 0.01;
+      const vh = window.innerHeight * DEFAULTS.VIEWPORT_HEIGHT_MULTIPLIER;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
@@ -1577,7 +1583,7 @@ export default function LauncherPage({ apps, categories }: { apps: AppData[]; ca
     if (isInstallable && !isInstalled) {
       const timer = setTimeout(() => {
         setShowInstallBanner(true);
-      }, 3000);
+      }, TIMING.INSTALL_BANNER_DELAY);
       return () => clearTimeout(timer);
     } else {
       setShowInstallBanner(false);
@@ -1605,7 +1611,7 @@ export default function LauncherPage({ apps, categories }: { apps: AppData[]; ca
         <div
           style={{
             position: 'fixed',
-            bottom: isMobile ? '68px' : '24px',
+            bottom: isMobile ? `${LAYOUT.MOBILE_INSTALL_BANNER_BOTTOM}px` : `${LAYOUT.DESKTOP_INSTALL_BANNER_BOTTOM}px`,
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 10000,
@@ -1739,7 +1745,6 @@ export default function LauncherPage({ apps, categories }: { apps: AppData[]; ca
             minWidth: "0",
           }}
         >
-          {/* ... سایر بخش‌ها بدون تغییر ... */}
         </div>
       )}
     </div>

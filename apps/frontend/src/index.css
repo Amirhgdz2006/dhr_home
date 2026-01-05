@@ -1066,7 +1066,7 @@ body {
   height: 100%;
   overflow: hidden;
   background-color: #000;
-  direction: rtl; /* RTL for Persian/Farsi */
+  direction: rtl; /* Right-to-left layout for Persian/Farsi content */
 }
 
 html {
@@ -1079,7 +1079,7 @@ html {
   height: 100vh;
   overflow: hidden;
   background-color: transparent;
-  direction: rtl; /* RTL for Persian/Farsi */
+  direction: rtl; /* Right-to-left layout for Persian/Farsi content */
 }
 
 /* IranYekanX Font Face Declarations are loaded via fonts.ts */

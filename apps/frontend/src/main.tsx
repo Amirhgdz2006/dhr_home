@@ -1,10 +1,16 @@
-
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./fonts.ts";
 import "./index.css";
+import { TIMING } from "./constants";
 
-createRoot(document.getElementById("root")!).render(<App />);
+const rootElement = document.getElementById("root");
+
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
+
+createRoot(rootElement).render(<App />);
 
 // Register Service Worker for offline support
 if ('serviceWorker' in navigator) {
@@ -12,10 +18,10 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('/sw.js', { updateViaCache: 'none' })
       .then((registration) => {
-        // Check for updates every hour
+        // Check for updates periodically
         setInterval(() => {
           registration.update();
-        }, 60 * 60 * 1000);
+        }, TIMING.SERVICE_WORKER_UPDATE_INTERVAL);
         
         // Also check for updates when page becomes visible
         document.addEventListener('visibilitychange', () => {
@@ -24,8 +30,9 @@ if ('serviceWorker' in navigator) {
           }
         });
       })
-      .catch(() => {
+      .catch((error) => {
         // Service Worker registration failed (non-critical)
+        console.warn("Service Worker registration failed:", error);
       });
   });
 }
