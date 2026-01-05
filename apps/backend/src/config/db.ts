@@ -9,8 +9,11 @@ const connectDB = async (): Promise<void> => {
     }
 
     const options = {
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+    minPoolSize: 2,
+    maxIdleTimeMS: 10000
     };
 
     await mongoose.connect(mongoUri, options);
