@@ -1,28 +1,43 @@
 /// <reference types="vite/client" />
 
-declare module '*.woff2' {
+// ===============================
+// Vite environment variables
+// ===============================
+interface ImportMetaEnv {
+  readonly VITE_BACKEND_URL: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
+// ===============================
+// Asset modules
+// ===============================
+declare module "*.woff2" {
   const src: string;
   export default src;
 }
 
-declare module '*.woff' {
+declare module "*.woff" {
   const src: string;
   export default src;
 }
 
-declare module '*.ttf' {
+declare module "*.ttf" {
   const src: string;
   export default src;
 }
 
-declare module '*.svg' {
+declare module "*.svg" {
   const src: string;
   export default src;
 }
 
-// Minimal type declarations for Sentry React SDK to avoid TS errors
-// The real types will come from the installed @sentry/react package.
-declare module '@sentry/react' {
+// ===============================
+// Sentry (minimal typings)
+// ===============================
+declare module "@sentry/react" {
   export interface InitOptions {
     dsn?: string;
     environment?: string;
@@ -35,8 +50,6 @@ declare module '@sentry/react' {
 
   export function captureException(
     error: unknown,
-    context?: Record<string, unknown> | undefined
+    context?: Record<string, unknown>
   ): void;
 }
-
-
