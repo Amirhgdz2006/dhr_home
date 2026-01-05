@@ -1,7 +1,9 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
+import ErrorBoundary from "./ErrorBoundary";
 import "./fonts.ts";
 import "./index.css";
+import "./observability";
 import { TIMING } from "./constants";
 
 const rootElement = document.getElementById("root");
@@ -10,7 +12,11 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-createRoot(rootElement).render(<App />);
+createRoot(rootElement).render(
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+);
 
 // Register Service Worker for offline support
 if ('serviceWorker' in navigator) {
