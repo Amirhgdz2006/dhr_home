@@ -10,9 +10,10 @@
     "log-api": "node scripts/log-api.js"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
+    "motion": "^11.11.17",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "motion": "^11.11.17"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
