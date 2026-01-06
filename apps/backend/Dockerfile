@@ -9,11 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY package.json package-lock.json nx.json ./
 COPY apps ./apps
 
-# نصب همه‌ی وابستگی‌ها برای build
 RUN npm ci
 RUN npx nx build backend
 
-# نصب فقط وابستگی‌های production برای runtime
 RUN npm prune --production
 
 # ---------- Stage 2: runtime ----------
@@ -22,11 +20,9 @@ WORKDIR /app
 
 RUN useradd --user-group --create-home --shell /bin/false appuser
 
-# کپی کد build شده
 COPY --from=builder /app/apps/backend/dist ./dist
 COPY --from=builder /app/apps/backend/uploads ./uploads
 
-# کپی وابستگی‌های production
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 

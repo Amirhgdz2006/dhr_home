@@ -58,7 +58,7 @@ app.get('/health', (req: Request, res: Response) => {
       status: 'ok',
       database: 'connected',
       timestamp: new Date().toISOString(),
-      mongodb_uri: process.env.MONGODB_URI?.split('@')[1] || 'N/A', // فقط host رو نشون میده
+      mongodb_uri: process.env.MONGODB_URI?.split('@')[1] || 'N/A'
     });
   } else {
     res.status(503).json({
