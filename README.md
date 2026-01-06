@@ -12,6 +12,8 @@ A modern, full-stack application launcher built with React, Node.js, Express, an
 - [API Documentation](#api-documentation)
 - [Development](#development)
 - [Deployment](#deployment)
+- [Project Structure](#project-structure)
+
 
 ## ✨ Features
 

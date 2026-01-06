@@ -23,13 +23,21 @@ app.use(hpp());
 
 // CORS configuration
 const allowedOrigins: string[] =
-  process.env.FRONTEND_URLS?.split(',') || (process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []);
+  process.env.FRONTEND_URLS?.split(',').map(url => url.trim()) || 
+  (process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []);
+
+console.log('Allowed CORS Origins:', allowedOrigins);
 
 app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      
+      console.warn('Blocked CORS request from:', origin);
       callback(new Error('Origin not allowed by CORS'));
     },
     credentials: true,
@@ -41,7 +49,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Health check endpoint - checks MongoDB connection
+// Health check endpoint
 app.get('/health', (req: Request, res: Response) => {
   const dbState = mongoose.connection.readyState;
   // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
@@ -50,6 +58,7 @@ app.get('/health', (req: Request, res: Response) => {
       status: 'ok',
       database: 'connected',
       timestamp: new Date().toISOString(),
+      mongodb_uri: process.env.MONGODB_URI?.split('@')[1] || 'N/A', // فقط host رو نشون میده
     });
   } else {
     res.status(503).json({
@@ -65,7 +74,6 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 
-
 // Serve all static files from the uploads folder
 const uploadsPath = path.resolve(process.cwd(), 'uploads');
 
@@ -76,7 +84,6 @@ if (!fs.existsSync(uploadsPath)) {
 }
 
 app.use('/uploads', express.static(uploadsPath));
-
 
 // 404 Handler
 app.use((req: Request, res: Response) => {
@@ -94,9 +101,11 @@ const PORT: number = parseInt(process.env.PORT || '1338', 10);
 // Connect to DB and start server
 connectDB()
   .then(() => {
-    app.listen(PORT, () =>
-      console.log(`Server running on port ${PORT}`)
-    );
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log('Server running on port', PORT);
+      console.log('MongoDB URI:', process.env.MONGODB_URI);
+      console.log('Allowed Origins:', allowedOrigins);
+    });
   })
   .catch((err) => {
     console.error('Failed to connect to DB:', err);
