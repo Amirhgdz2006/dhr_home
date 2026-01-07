@@ -781,23 +781,29 @@ function ApplicationsGrid({ imageSrc, apps, categories }: { imageSrc: string; ap
               direction: "rtl",
             }}
           >
+
             <div className="relative w-full" data-name="categories" dir="rtl">
               <div className="flex items-center overflow-hidden">
                 <div className="flex gap-2 items-center px-2 py-4 w-full">
-                  {(categories && categories.length ? categories.map((c) => c.name) : ["ابزارها", "مستندات", "پلتفرم‌ها", "ارتباطات داخلی", "درخواست‌های اداری"]).map(
-                    (category) => (
+                  {categories && categories.length > 0 ? (
+                    categories.map((c) => (
                       <CategoryButton
-                        key={category}
-                        label={category}
-                        isActive={selectedCategory === category}
-                        onClick={() => setSelectedCategory(selectedCategory === category ? "" : category)}
+                        key={c.name}
+                        label={c.name}
+                        isActive={selectedCategory === c.name}
+                        onClick={() =>
+                          setSelectedCategory(selectedCategory === c.name ? "" : c.name)
+                        }
                         colors={colors}
                       />
-                    ),
+                    ))
+                  ) : (
+                    <span className="text-gray-500">هیچ دسته‌بندی موجود نیست</span>
                   )}
                 </div>
               </div>
             </div>
+
 
             {Object.entries(groupedApps).map(([category, apps], categoryIndex, categoriesArray) => {
               const rows: AppData[][] = [];
