@@ -12,11 +12,13 @@ router.get('/data', checkOrigin, appController.getData);
 
 // App endpoints
 router.post('/app', validateBody(schemas.createAppSchema), auth, appController.createApp);
+router.get('/app/:id', auth, appController.getApp);
 router.put('/app/:id', validateBody(schemas.updateAppSchema), auth, appController.updateApp);
 router.delete('/app/:id', auth, appController.deleteApp);
 
 // Category endpoints
 router.post('/category', validateBody(schemas.createCategorySchema), auth, categoryController.createCategory);
+router.get('/category/:id', auth, categoryController.getCategory);
 router.put('/category/:id', validateBody(schemas.updateCategorySchema), auth, categoryController.updateCategory);
 router.delete('/category/:id', auth, categoryController.deleteCategory);
 

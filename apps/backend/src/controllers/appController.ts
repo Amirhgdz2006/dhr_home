@@ -29,6 +29,19 @@ export const createApp = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
+export const getApp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const app = await appService.getAppById(parseInt(req.params.id));
+    if (!app) {
+      res.status(404).json({ error: 'App not found' });
+      return;
+    }
+    res.json({ data: app });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const updateApp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const updatedApp = await appService.updateApp(parseInt(req.params.id), req.body);

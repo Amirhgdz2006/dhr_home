@@ -46,6 +46,10 @@ export const createApp = (data: {
   return appRepository.create(data);
 };
 
+export const getAppById = (id: number) => {
+  return appRepository.findById(id);
+};
+
 export const updateApp = (id: number, data: Partial<{
   name: string;
   englishName?: string;

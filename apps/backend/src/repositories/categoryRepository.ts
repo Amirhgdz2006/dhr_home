@@ -12,6 +12,10 @@ export const create = (data: {
   return category.save();
 };
 
+export const findById = (id: number) => {
+  return Category.findOne({ id });
+}
+
 export const updateById = (id: number, data: Partial<{
   name: string;
   order?: number | null;

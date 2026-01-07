@@ -10,6 +10,19 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
   }
 };
 
+export const getCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const category = await categoryService.getCategoryById(parseInt(req.params.id));
+    if (!category) {
+      res.status(404).json({ error: 'Category not found' });
+      return;
+    }
+    res.json({ data: category });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const updateCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const updatedCategory = await categoryService.updateCategory(parseInt(req.params.id), req.body);

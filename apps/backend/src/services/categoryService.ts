@@ -7,6 +7,10 @@ export const createCategory = (data: {
   return categoryRepository.create(data);
 };
 
+export const getCategoryById = (id: number) => {
+  return categoryRepository.findById(id);
+};
+
 export const updateCategory = (id: number, data: Partial<{
   name: string;
   order?: number | null;
