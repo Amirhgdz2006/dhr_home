@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* general setting */
+html,
+body {
+  direction: rtl;
+  font-family: 'IRANYekanX', sans-serif;
+}
