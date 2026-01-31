@@ -4,7 +4,7 @@ import ErrorBoundary from "./ErrorBoundary";
 import "./fonts.ts";
 import "./index.css";
 import "./observability";
-import { TIMING } from "./constants";
+import { TIMING } from "./constants.ts";
 
 const rootElement = document.getElementById("root");
 
