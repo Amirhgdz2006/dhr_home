@@ -1,3 +1,4 @@
+// ✅ apps/frontend/src/data/types.ts
 import { ReactNode } from "react";
 
 export interface AppData {
@@ -17,3 +18,33 @@ export interface Category {
   order?: number;
 }
 
+export interface APIResponse<T> {
+  data: T;
+  error?: string;
+  status: number;
+}
+
+export interface BackendCategory {
+  name: string;
+  order?: number;
+  apps?: BackendApp[];
+}
+
+export interface BackendApp {
+  name: string;
+  englishName?: string;
+  keywords?: string[];
+  icon_background_color?: string;
+  description: string;
+  icon?: { url: string };
+  url: string;
+}
+
+export type LoadingState = "idle" | "loading" | "success" | "error";
+
+export interface AppState {
+  apps: AppData[];
+  categories: Category[];
+  loading: LoadingState;
+  error: string | null;
+}

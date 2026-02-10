@@ -11,11 +11,9 @@ export function CategoryButton({ label, isActive, onClick, colors }: CategoryBut
   return (
     <button
       onClick={onClick}
-      className="flex items-center justify-center px-3 py-1 rounded-full transition-all duration-200"
+      className="flex items-center justify-center px-3 py-1 rounded-full transition-all duration-200 backdrop-blur-md"
       style={{
         background: isActive ? colors.buttonBgActive : colors.buttonBgInactive,
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
         border: `1px solid ${isActive ? colors.buttonBorderActive : colors.buttonBorderInactive}`,
       }}
       onMouseEnter={(e) => {

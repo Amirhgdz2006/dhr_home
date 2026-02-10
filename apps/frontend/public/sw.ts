@@ -1,16 +1,21 @@
+/// <reference lib="webworker" />
+
+// Cast self به ServiceWorkerGlobalScope تا TS اشتباه نگیرد
+const swSelf = self as unknown as ServiceWorkerGlobalScope;
+
 // Service Worker for Offline Support
 const CACHE_NAME = 'dhr-launcher-v2';
 const RUNTIME_CACHE = 'dhr-launcher-runtime-v2';
 
 // Assets to cache on install
-const STATIC_ASSETS = [
+const STATIC_ASSETS: string[] = [
   '/',
   '/index.html',
   '/src/main.tsx',
 ];
 
 // Install event - cache static assets
-self.addEventListener('install', (event) => {
+swSelf.addEventListener('install', (event: ExtendableEvent) => {
   console.log('[Service Worker] Installing...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -18,55 +23,44 @@ self.addEventListener('install', (event) => {
       return cache.addAll(STATIC_ASSETS);
     })
   );
-  self.skipWaiting();
+  swSelf.skipWaiting();
 });
 
 // Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
+swSelf.addEventListener('activate', (event: ExtendableEvent) => {
   console.log('[Service Worker] Activating...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((cacheName) => {
-            // Delete all old cache versions
-            return (
-              cacheName !== CACHE_NAME &&
-              cacheName !== RUNTIME_CACHE
-            );
-          })
+          .filter((cacheName) => cacheName !== CACHE_NAME && cacheName !== RUNTIME_CACHE)
           .map((cacheName) => {
             console.log('[Service Worker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           })
-      ).then(() => {
-        // Force all clients to use the new service worker
-        return self.clients.claim();
-      });
+      ).then(() => swSelf.clients.claim());
     })
   );
 });
 
 // Fetch event - serve from cache, fallback to network
-self.addEventListener('fetch', (event) => {
+swSelf.addEventListener('fetch', (event: FetchEvent) => {
+  const req = event.request;
+
   // Skip non-GET requests
-  if (event.request.method !== 'GET') {
-    return;
-  }
+  if (req.method !== 'GET') return;
 
   // Skip chrome-extension and other non-http(s) requests
-  if (!event.request.url.startsWith('http')) {
-    return;
-  }
+  if (!req.url.startsWith('http')) return;
 
   // Skip Vite HMR requests in development
-  if (event.request.url.includes('__vite') || event.request.url.includes('@vite')) {
-    return;
-  }
+  if (req.url.includes('__vite') || req.url.includes('@vite')) return;
 
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
+    (async (): Promise<Response> => {
+      try {
+        const response = await fetch(req);
+
         // Don't cache non-successful responses
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
@@ -76,11 +70,11 @@ self.addEventListener('fetch', (event) => {
         const responseToCache = response.clone();
 
         // Cache HTML, CSS, JS, and other assets
-        const url = new URL(event.request.url);
-        const shouldCache = 
-          event.request.destination === 'document' ||
-          event.request.destination === 'script' ||
-          event.request.destination === 'style' ||
+        const url = new URL(req.url);
+        const shouldCache =
+          req.destination === 'document' ||
+          req.destination === 'script' ||
+          req.destination === 'style' ||
           url.pathname.endsWith('.css') ||
           url.pathname.endsWith('.js') ||
           url.pathname.endsWith('.woff2') ||
@@ -89,31 +83,28 @@ self.addEventListener('fetch', (event) => {
           url.pathname.endsWith('.svg');
 
         if (shouldCache) {
-          caches.open(RUNTIME_CACHE).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+          const cache = await caches.open(RUNTIME_CACHE);
+          await cache.put(req, responseToCache);
         }
 
         return response;
-      })
-      .catch(() => {
+      } catch (err) {
         // Network failed, try cache
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
+        const cachedResponse = await caches.match(req);
+        if (cachedResponse) return cachedResponse;
 
-          // If network fails and we're offline, try to return a fallback
-          if (event.request.destination === 'document') {
-            return caches.match('/index.html');
-          }
-          // For other requests, return a basic offline response
-          return new Response('Offline', {
-            status: 503,
-            statusText: 'Service Unavailable',
-          });
+        // If network fails and we're offline, try to return a fallback
+        if (req.destination === 'document') {
+          const fallback = await caches.match('/index.html');
+          if (fallback) return fallback;
+        }
+
+        // For other requests, return a basic offline response
+        return new Response('Offline', {
+          status: 503,
+          statusText: 'Service Unavailable',
         });
-      })
+      }
+    })()
   );
 });
-

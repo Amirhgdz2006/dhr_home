@@ -40,9 +40,9 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
       onMouseLeave={() => setIsHovered(false)}
       dir="rtl"
     >
-      <div className="flex items-center w-full rounded inherit overflow-hidden">
-        <div className="flex items-center gap-2 w-full p-2">
-          <div className="relative w-6 h-6 shrink-0">
+      <div className="flex w-full items-center overflow-hidden rounded-inherit">
+        <div className="flex w-full items-center gap-2 p-2">
+          <div className="relative h-6 w-6 shrink-0">
             <div
               className="absolute inset-0"
               style={
@@ -51,13 +51,15 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
                 } as React.CSSProperties
               }
             >
-              <svg className="block w-full h-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+              <svg className="block h-full w-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
                 <path
                   d={iconPaths.p388bbe00}
                   stroke="var(--stroke-0, white)"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeOpacity={isFocused || searchQuery.length > 0 ? "1" : isHovered ? "0.85" : "0.7"}
+                  strokeOpacity={
+                    isFocused || searchQuery.length > 0 ? "1" : isHovered ? "0.85" : "0.7"
+                  }
                   strokeWidth="2"
                   className="transition-all"
                 />
@@ -74,7 +76,7 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
             placeholder="جستجو..."
-            className="flex-1 bg-transparent border-none outline-none text-right text-[20px] font-['IRANYekanX'] font-medium"
+            className="flex-1 bg-transparent border-none outline-none text-right text-[20px] font-medium font-['IRANYekanX']"
             style={{ color: getTextColor() }}
             dir="rtl"
           />
@@ -91,12 +93,16 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
 
       <div
         aria-hidden
-        className="absolute inset-0 pointer-events-none transition-all duration-200"
+        className="pointer-events-none absolute inset-0 transition-all duration-200"
         style={{
           borderStyle: "solid",
           borderWidth: "0 0 0.5px 0",
           borderColor:
-            isFocused || searchQuery.length > 0 ? colors.textPrimary : isHovered ? colors.textSecondary : colors.textTertiary,
+            isFocused || searchQuery.length > 0
+              ? colors.textPrimary
+              : isHovered
+              ? colors.textSecondary
+              : colors.textTertiary,
         }}
       />
     </div>

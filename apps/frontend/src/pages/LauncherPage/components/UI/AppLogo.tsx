@@ -7,8 +7,8 @@ interface AppLogoProps {
 
 export function AppLogo({ colors }: AppLogoProps) {
   return (
-    <div className="relative shrink-0 w-6 h-6" data-name="logo_red">
-      <svg className="block w-full h-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+    <div className="relative h-6 w-6 shrink-0" data-name="logo_red">
+      <svg className="block h-full w-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
         <g id="logo_red">
           <path
             clipRule="evenodd"

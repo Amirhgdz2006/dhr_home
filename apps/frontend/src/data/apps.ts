@@ -1,21 +1,18 @@
 import { AppData } from "./types";
 import { fetchAppsFromStrapi } from "./api";
 
-/**
- * Apps data store
- * Apps are loaded from the backend API via fetchAppsFromStrapi()
- */
-export let apps: AppData[] = [];
+let appsCache: AppData[] = [];
 
-/**
- * Load apps from backend API
- * Updates the apps store with fetched data
- */
-export async function loadApps(): Promise<void> {
+export async function loadApps(): Promise<AppData[]> {
   try {
-    apps = await fetchAppsFromStrapi();
+    appsCache = await fetchAppsFromStrapi();
+    return [...appsCache];
   } catch (error) {
     console.error("Failed to load apps:", error);
-    apps = [];
+    return [];
   }
+}
+
+export function getApps(): AppData[] {
+  return [...appsCache];
 }

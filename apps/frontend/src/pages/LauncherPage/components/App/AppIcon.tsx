@@ -17,7 +17,10 @@ export function AppIcon({ app, onHover, onLeave, colors }: AppIconProps) {
       className="flex-1 min-w-0 shrink-0 block no-underline"
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
+      onFocus={onHover}
+      onBlur={onLeave}
       style={{ color: "inherit", overflow: "visible" }}
+      aria-label={`باز کردن ${app.name}`}
     >
       <div className="flex flex-col items-center justify-center p-2">
         <div
@@ -48,14 +51,24 @@ export function AppIcon({ app, onHover, onLeave, colors }: AppIconProps) {
             typeof app.icon === "string" ? (
               <img
                 src={resolveIconUrl(app.icon)}
-                alt={`${app.name} icon`}
+                alt=""
+                role="presentation"
                 style={{ width: 45, height: 45, objectFit: "cover", borderRadius: 13 }}
               />
             ) : (
-              <div style={{ width: 45, height: 45, borderRadius: 13 }}>{app.icon}</div>
+              <div style={{ width: 45, height: 45, borderRadius: 13 }} role="img" aria-label={`آیکون ${app.name}`}>
+                {app.icon}
+              </div>
             )
           ) : (
-            <div style={{ width: 45, height: 45, borderRadius: 13, color: colors.isLight ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)" }}>
+            <div
+              style={{
+                width: 45,
+                height: 45,
+                borderRadius: 13,
+                color: colors.isLight ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)",
+              }}
+            >
               <PlaceholderIcon size={45} />
             </div>
           )}

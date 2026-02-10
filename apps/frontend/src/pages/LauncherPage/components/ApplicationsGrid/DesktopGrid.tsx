@@ -1,3 +1,4 @@
+// DesktopGrid.tsx:
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { AppData, Category } from "../../../data/types";
@@ -40,35 +41,27 @@ export function DesktopGrid({
   return (
     <>
       <div
-        className="fixed flex flex-col items-center rounded-[24px] w-[640px] max-w-[90vw] z-10"
+        className="fixed flex flex-col items-center rounded-[24px] w-[640px] max-w-[90vw] z-10 left-1/2 top-[15%] -translate-x-1/2 h-[480px]"
         data-name="ApplicationsGrid"
         style={{
-          transform: "translateX(-50%)",
-          left: "50%",
-          top: "15%",
           background: colors.panelBg,
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
           border: `1px solid ${colors.panelBorder}`,
           boxShadow: colors.panelShadow,
-          height: 480,
         }}
       >
         <div className="w-full px-8 pt-4 shrink-0">
           <Searchbox searchQuery={searchQuery} setSearchQuery={setSearchQuery} colors={colors} />
         </div>
 
-        <div className="flex-1 w-full flex gap-2 items-start px-8 pb-4 min-h-0" style={{ overflow: "hidden", direction: "rtl" }}>
+        <div className="flex-1 w-full flex gap-2 items-start px-8 pb-4 min-h-0 overflow-hidden" style={{ direction: "rtl" }}>
           <div
             ref={scrollRef}
-            className="flex-1 flex flex-col items-start min-h-0"
+            className="flex-1 flex flex-col items-start min-h-0 h-full max-h-full overflow-y-auto overflow-x-hidden"
             style={{
-              overflowY: "auto",
-              overflowX: "hidden",
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-              height: "100%",
-              maxHeight: "100%",
               direction: "rtl",
             }}
           >
@@ -104,10 +97,8 @@ export function DesktopGrid({
                   {!isLastCategory && (
                     <div
                       aria-hidden
-                      className="absolute inset-0 pointer-events-none"
+                      className="absolute inset-0 pointer-events-none border-b"
                       style={{
-                        borderStyle: "solid",
-                        borderWidth: "0 0 0.5px 0",
                         borderColor: colors.isLight ? `rgba(0,0,0,0.05)` : `rgba(255,255,255,0.05)`,
                       }}
                     />
@@ -134,7 +125,7 @@ export function DesktopGrid({
                   {rows.map((row, rowIndex) => (
                     <div key={rowIndex} className="relative w-full">
                       <div className="overflow-visible">
-                        <div className="flex gap-2 py-0 w-full" style={{ overflow: "visible", direction: "rtl" }}>
+                        <div className="flex gap-2 py-0 w-full overflow-visible" style={{ direction: "rtl" }}>
                           {row.map((app, index) => (
                             <AppIcon
                               key={index}
@@ -173,15 +164,13 @@ export function DesktopGrid({
       </div>
 
       <div
-        className="fixed w-[640px] max-w-[90vw] z-10"
+        className="fixed w-[640px] max-w-[90vw] z-10 left-1/2 -translate-x-1/2"
         style={{
-          left: "50%",
           top: "calc(15% + 480px + 1rem)",
-          transform: "translateX(-50%)",
         }}
       >
         <motion.div
-          className="flex items-center rounded-[24px"
+          className="flex items-center rounded-[24px] px-4 overflow-visible"
           style={{
             background: colors.panelBg,
             backdropFilter: "blur(20px) saturate(180%)",
@@ -189,10 +178,6 @@ export function DesktopGrid({
             border: `1px solid ${colors.panelBorder}`,
             boxShadow: colors.panelShadow,
             cursor: hoveredApp ? "default" : "pointer",
-            paddingLeft: 16,
-            paddingRight: 16,
-            overflow: "visible",
-            borderRadius: 24,
           }}
           layout
           transition={{
@@ -214,8 +199,7 @@ export function DesktopGrid({
             }}
           >
             <div
-              className="flex gap-1 items-start flex-1"
-              style={{ minWidth: 0, position: "relative", zIndex: 1 }}
+              className="flex gap-1 items-start flex-1 min-w-0 relative z-[1]"
               onMouseEnter={() => {
                 if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
               }}
@@ -232,21 +216,24 @@ export function DesktopGrid({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-                    className="flex gap-1 items-start"
+                    className="flex gap-1 items-start flex-1 min-w-0"
                     dir="rtl"
-                    style={{ flex: 1, minWidth: 0 }}
                   >
                     {hoveredApp.icon && (
                       <motion.div
-                        className="relative shrink-0 w-6 h-6"
+                        className="relative shrink-0 w-6 h-6 mt-[2px]"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.7 }}
                         transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-                        style={{ filter: colors.isLight ? "brightness(0)" : "brightness(1)", marginTop: 2 }}
+                        style={{ filter: colors.isLight ? "brightness(0)" : "brightness(1)" }}
                       >
                         <div className="w-full h-full flex items-center justify-center">
                           {typeof hoveredApp.icon === "string" ? (
-                            <img src={resolveIconUrl(hoveredApp.icon)} alt={`${hoveredApp.name} icon`} style={{ width: 24, height: 24, objectFit: "cover", borderRadius: 6 }} />
+                            <img
+                              src={resolveIconUrl(hoveredApp.icon)}
+                              alt={`${hoveredApp.name} icon`}
+                              className="w-6 h-6 object-cover rounded-[6px]"
+                            />
                           ) : (
                             hoveredApp.icon
                           )}
@@ -255,7 +242,7 @@ export function DesktopGrid({
                     )}
 
                     <p
-                      className="text-sm font-['IRANYekanX']"
+                      className="text-sm font-['IRANYekanX'] flex-1 min-w-0 overflow-hidden whitespace-normal break-words"
                       style={{
                         lineHeight: 1.8,
                         color: colors.textPrimary,
@@ -264,11 +251,6 @@ export function DesktopGrid({
                         display: "-webkit-box",
                         WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        wordWrap: "break-word",
-                        whiteSpace: "normal",
-                        flex: 1,
-                        minWidth: 0,
                       }}
                       dir="rtl"
                     >
@@ -285,12 +267,12 @@ export function DesktopGrid({
                     className="flex gap-1 items-start justify-start flex-1 min-w-0"
                     dir="rtl"
                   >
-                    <div style={{ opacity: 0.7 }}>
+                    <div className="opacity-70">
                       <AppLogo colors={colors} />
                     </div>
 
                     <p
-                      className="text-sm font-['IRANYekanX']"
+                      className="text-sm font-['IRANYekanX'] flex-1 min-w-0 overflow-hidden"
                       style={{
                         lineHeight: 1.8,
                         color: colors.textPrimary,
@@ -299,9 +281,6 @@ export function DesktopGrid({
                         display: "-webkit-box",
                         WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        flex: 1,
-                        minWidth: 0,
                       }}
                       dir="rtl"
                     >

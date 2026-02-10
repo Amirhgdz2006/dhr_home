@@ -18,8 +18,7 @@ export function MobileGrid({ groupedApps, searchQuery, setSearchQuery, colors }:
     <>
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto touch-auto"
-        style={{ width: "100vw", paddingBottom: 16 }}
+        className="flex-1 overflow-y-auto touch-auto w-screen pb-4"
       >
         <div className="w-full px-4">
           {Object.entries(groupedApps).length === 0 ? (
@@ -40,13 +39,10 @@ export function MobileGrid({ groupedApps, searchQuery, setSearchQuery, colors }:
               <div key={category} className="w-full">
                 <div className="pt-6 pb-4">
                   <p
-                    className="font-['IRANYekanX'] font-bold text-right"
+                    className="font-['IRANYekanX'] font-bold text-right text-[32px] opacity-50"
                     style={{
-                      fontSize: 32,
                       color: colors.textPrimary,
-                      opacity: 0.5,
                       textShadow: colors.textShadow || (colors.isLight ? "none" : "0 1px 2px rgba(0,0,0,0.3)"),
-                      fontWeight: 700,
                     }}
                     dir="rtl"
                   >
@@ -63,11 +59,11 @@ export function MobileGrid({ groupedApps, searchQuery, setSearchQuery, colors }:
         </div>
       </div>
 
-      <MobileSearchBar 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
-        colors={colors} 
-        scrollContainerRef={scrollContainerRef} 
+      <MobileSearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        colors={colors}
+        scrollContainerRef={scrollContainerRef}
       />
     </>
   );

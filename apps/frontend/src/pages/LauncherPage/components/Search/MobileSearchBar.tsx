@@ -26,51 +26,46 @@ export function MobileSearchBar({
     }
   }, [searchQuery, scrollContainerRef]);
 
-  const getTextColor = () => (isFocused || searchQuery.length > 0 ? colors.textPrimary : colors.textTertiary);
+  const getTextColor = () =>
+    isFocused || searchQuery.length > 0 ? colors.textPrimary : colors.textTertiary;
 
   return (
     <div
-      className="w-full px-4 pb-safe absolute left-0 right-0 flex gap-3"
+      className="absolute left-0 right-0 bottom-5 flex w-full gap-3 px-4 pb-safe pointer-events-none"
       style={{
         paddingBottom: `max(0px, env(safe-area-inset-bottom))`,
-        pointerEvents: "none",
-        bottom: 20,
       }}
     >
       <button
         onClick={() => {
           window.location.href = URLS.ZIGO_APP;
         }}
-        className="shrink-0 flex items-center justify-center"
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full p-0 m-0 cursor-pointer pointer-events-auto"
         style={{
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
           border: `1px solid ${colors.panelBorder}`,
           boxShadow: colors.panelShadow,
-          cursor: "pointer",
-          padding: 0,
-          margin: 0,
-          pointerEvents: "auto",
         }}
       >
-        <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", filter: colors.isLight ? "brightness(0)" : "brightness(1)" }} />
+        <div
+          className="flex items-center justify-center"
+          style={{
+            width: 28,
+            height: 28,
+            filter: colors.isLight ? "brightness(0)" : "brightness(1)",
+          }}
+        />
       </button>
 
       <div
-        className="flex-1 relative"
+        className="relative flex-1 h-12 rounded-full px-4 py-3 pointer-events-auto"
         style={{
           background: colors.panelBg,
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
           border: `1px solid ${colors.panelBorder}`,
-          borderRadius: 9999,
           boxShadow: colors.panelShadow,
-          padding: "12px 16px",
-          height: 48,
-          pointerEvents: "auto",
         }}
       >
         <input
@@ -88,10 +83,12 @@ export function MobileSearchBar({
           inputMode="text"
           data-1p-ignore="true"
           data-lpignore="true"
-          className="w-full font-['IRANYekanX'] text-[16px] outline-none border-none bg-transparent"
+          className="w-full bg-transparent border-none outline-none text-[16px] font-['IRANYekanX']"
           style={{
             color: getTextColor(),
-            textShadow: colors.textShadow || (colors.isLight ? "none" : "0 1px 2px rgba(0,0,0,0.3)"),
+            textShadow:
+              colors.textShadow ||
+              (colors.isLight ? "none" : "0 1px 2px rgba(0,0,0,0.3)"),
             padding: 0,
           }}
           dir="rtl"

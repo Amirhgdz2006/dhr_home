@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { AppData, Category } from "../../../data/types";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { useAdaptiveColors, AdaptiveColors } from "../../hooks/useAdaptiveColors";
@@ -32,36 +32,51 @@ const defaultColors: AdaptiveColors = {
 export function ApplicationsGrid({ imageSrc, apps, categories }: ApplicationsGridProps) {
   const isMobile = useIsMobile();
   const adaptiveColors = useAdaptiveColors(imageSrc || "");
-  const colors = isMobile ? defaultColors : (adaptiveColors || defaultColors);
+  const colors = useMemo(
+    () => (isMobile ? defaultColors : (adaptiveColors || defaultColors)),
+    [isMobile, adaptiveColors]
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const filteredApps = apps.filter((app) => {
-    const searchLower = searchQuery.toLowerCase();
-    const matchesSearch =
-      searchQuery === "" ||
-      app.name.includes(searchQuery) ||
-      app.description.includes(searchQuery) ||
-      (app.englishName && app.englishName.toLowerCase().includes(searchLower)) ||
-      (app.keywords && app.keywords.some((k) => k.toLowerCase().includes(searchLower)));
+  const filteredApps = useMemo(() => {
+    return apps.filter((app) => {
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch =
+        searchQuery === "" ||
+        app.name.includes(searchQuery) ||
+        app.description.includes(searchQuery) ||
+        (app.englishName && app.englishName.toLowerCase().includes(searchLower)) ||
+        (app.keywords && app.keywords.some((k) => k.toLowerCase().includes(searchLower)));
 
-    const matchesCategory = isMobile ? true : selectedCategory === "" || app.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+      const matchesCategory = isMobile ? true : selectedCategory === "" || app.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [apps, searchQuery, selectedCategory, isMobile]);
 
-  const groupedApps = filteredApps.reduce((acc, app) => {
-    if (!acc[app.category]) acc[app.category] = [];
-    acc[app.category].push(app);
-    return acc;
-  }, {} as Record<string, AppData[]>);
+  const groupedApps = useMemo(() => {
+    return filteredApps.reduce((acc, app) => {
+      if (!acc[app.category]) acc[app.category] = [];
+      acc[app.category].push(app);
+      return acc;
+    }, {} as Record<string, AppData[]>);
+  }, [filteredApps]);
+
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const handleCategoryChange = useCallback((category: string) => {
+    setSelectedCategory(category);
+  }, []);
 
   if (isMobile) {
     return (
       <MobileGrid
         groupedApps={groupedApps}
         searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        setSearchQuery={handleSearchChange}
         colors={colors}
       />
     );
@@ -72,9 +87,9 @@ export function ApplicationsGrid({ imageSrc, apps, categories }: ApplicationsGri
       groupedApps={groupedApps}
       categories={categories}
       searchQuery={searchQuery}
-      setSearchQuery={setSearchQuery}
+      setSearchQuery={handleSearchChange}
       selectedCategory={selectedCategory}
-      setSelectedCategory={setSelectedCategory}
+      setSelectedCategory={handleCategoryChange}
       colors={colors}
     />
   );

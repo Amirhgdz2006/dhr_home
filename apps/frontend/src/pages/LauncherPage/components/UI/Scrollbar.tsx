@@ -16,14 +16,21 @@ export function Scrollbar({
   clientHeight,
   colors,
 }: ScrollbarProps) {
-  const scrollbarHeight = clientHeight > 0 ? (clientHeight / scrollHeight) * clientHeight : 64;
+  const scrollbarHeight =
+    clientHeight > 0 ? (clientHeight / scrollHeight) * clientHeight : 64;
   const maxScroll = scrollHeight - clientHeight;
-  const scrollbarTop = maxScroll > 0 ? (scrollPosition / maxScroll) * (clientHeight - scrollbarHeight) : 0;
+  const scrollbarTop =
+    maxScroll > 0
+      ? (scrollPosition / maxScroll) * (clientHeight - scrollbarHeight)
+      : 0;
 
   return (
-    <div className="relative w-1 h-full" style={{ opacity: isVisible ? 1 : 0 }}>
+    <div
+      className="relative h-full w-1"
+      style={{ opacity: isVisible ? 1 : 0 }}
+    >
       <motion.div
-        className="absolute rounded-full w-1"
+        className="absolute w-1 rounded-full"
         style={{
           background: colors.scrollbarBg,
           height: `${Math.max(scrollbarHeight, 20)}px`,

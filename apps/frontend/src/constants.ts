@@ -1,44 +1,33 @@
-/**
- * Application constants
- * Centralized constants for consistent usage across the application
- */
-
-/**
- * Screen breakpoints
- */
+// ✅ apps/frontend/src/constants.ts
 export const BREAKPOINTS = {
   MOBILE: 768,
+  TABLET: 1024,
+  DESKTOP: 1280,
 } as const;
 
-/**
- * Timing constants (in milliseconds)
- */
 export const TIMING = {
   INSTALL_BANNER_DELAY: 3000,
   SCROLLBAR_HIDE_DELAY: 1000,
   HOVER_DELAY: 100,
   AUTO_FOCUS_DELAY: 100,
   SCROLL_TO_TOP_DELAY: 50,
-  SERVICE_WORKER_UPDATE_INTERVAL: 60 * 60 * 1000, // 1 hour
+  SERVICE_WORKER_UPDATE_INTERVAL: 60 * 60 * 1000,
+  DEBOUNCE_DELAY: 300,
+  ANIMATION_DURATION: 400,
 } as const;
 
-/**
- * Image analysis constants
- */
 export const IMAGE_ANALYSIS = {
   SAMPLE_SIZE: 200,
   BRIGHTNESS_THRESHOLD: 100,
-  PIXEL_SAMPLE_INTERVAL: 32, // Sample every 8th pixel (32 bytes = 8 RGBA pixels)
+  PIXEL_SAMPLE_INTERVAL: 32,
+  MAX_IMAGE_SIZE: 5 * 1024 * 1024, // 5MB
 } as const;
 
-/**
- * Layout constants
- */
 export const LAYOUT = {
   DESKTOP_PANEL_WIDTH: 640,
   DESKTOP_PANEL_HEIGHT: 480,
   DESKTOP_PANEL_TOP: "15%",
-  DESKTOP_PANEL_MARGIN_LEFT: -320, // Half of panel width
+  DESKTOP_PANEL_MARGIN_LEFT: -320,
   MOBILE_SEARCH_BAR_BOTTOM: 20,
   MOBILE_INSTALL_BANNER_BOTTOM: 68,
   DESKTOP_INSTALL_BANNER_BOTTOM: 24,
@@ -54,28 +43,28 @@ export const LAYOUT = {
   MIN_SCROLLBAR_HEIGHT: 20,
 } as const;
 
-/**
- * API and URL constants
- */
 export const URLS = {
   ZIGO_APP: "https://dhr.digikala.com/apps/zigo",
   BACKGROUND_IMAGE_PATH: "/uploads/background.png",
+  API_ENDPOINT: "/api/data",
 } as const;
 
-/**
- * Keyboard shortcuts
- */
 export const KEYBOARD_SHORTCUTS = {
   SEARCH: "k",
   SELECT_ALL: "a",
+  ESCAPE: "Escape",
 } as const;
 
-/**
- * Default values
- */
 export const DEFAULTS = {
   APP_BG_COLOR: "rgba(0,0,0,0.1)",
   CATEGORY_ORDER: 999,
   VIEWPORT_HEIGHT_MULTIPLIER: 0.01,
+  RETRY_ATTEMPTS: 3,
+  RETRY_DELAY: 1000,
 } as const;
 
+export const VALIDATION = {
+  MAX_SEARCH_LENGTH: 100,
+  MIN_APP_NAME_LENGTH: 1,
+  MAX_APP_NAME_LENGTH: 50,
+} as const;

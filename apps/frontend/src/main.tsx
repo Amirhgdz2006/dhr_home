@@ -22,7 +22,7 @@ createRoot(rootElement).render(
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/sw.js', { updateViaCache: 'none' })
+      .register('/sw.ts', { updateViaCache: 'none' })
       .then((registration) => {
         // Check for updates periodically
         setInterval(() => {
@@ -42,4 +42,3 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
-  
