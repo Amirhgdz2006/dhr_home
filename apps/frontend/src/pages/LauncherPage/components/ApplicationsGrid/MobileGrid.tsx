@@ -1,5 +1,5 @@
 import { useRef, CSSProperties } from "react";
-import { AppData } from "../../../data/types";
+import { AppData } from "@/types";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { AppListItem } from "../App/AppListItem";
 import { MobileSearchBar } from "../Search/MobileSearchBar";
@@ -10,16 +10,6 @@ interface MobileGridProps {
   setSearchQuery: (q: string) => void;
   colors: AdaptiveColors;
 }
-
-const GRID_CONFIG = {
-  padding: {
-    horizontal: 16, // px-4
-    vertical: {
-      top: 24, // pt-6
-      bottom: 16, // pb-4
-    },
-  },
-} as const;
 
 export function MobileGrid({ 
   groupedApps, 

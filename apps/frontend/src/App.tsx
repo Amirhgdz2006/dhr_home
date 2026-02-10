@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import LauncherPage from "./pages/LauncherPage";
-import { AppData, Category } from "./data/types";
+import { AppData, Category } from "@/types";
 import { loadApps } from "./data/apps";
 import { loadCategories } from "./data/categories";
 

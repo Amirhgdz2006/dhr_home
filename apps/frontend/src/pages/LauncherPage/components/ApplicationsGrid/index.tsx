@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { AppData, Category } from "../../../data/types";
+import { AppData, Category } from "@/types";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { useAdaptiveColors, AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { MobileGrid } from "./MobileGrid";

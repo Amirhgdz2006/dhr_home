@@ -1,4 +1,4 @@
-import { AppData } from "./types";
+import { AppData } from "@/types";
 import { fetchAppsFromStrapi } from "./api";
 
 let appsCache: AppData[] = [];

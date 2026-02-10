@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { AppData } from "../../../data/types";
+import { AppData } from "@/types";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { resolveIconUrl } from "../../utils/resolveIconUrl";
 import { PlaceholderIcon } from "../UI/PlaceholderIcon";

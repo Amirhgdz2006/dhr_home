@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, CSSProperties } from "react";
-import { AppData, Category } from "../../data/types";
+import { AppData, Category } from "@/types";
 import { useInstallPrompt } from "../../hooks/useInstallPrompt";
 import { useIsMobile } from "./hooks/useIsMobile";
 import { useAdaptiveColors } from "./hooks/useAdaptiveColors";

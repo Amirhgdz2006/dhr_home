@@ -1,6 +1,6 @@
 import { useState, useRef, CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { AppData, Category } from "../../../data/types";
+import { AppData, Category } from "@/types";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { useScrollbar } from "../../hooks/useScrollbar";
 import { Searchbox } from "../Search/Searchbox";

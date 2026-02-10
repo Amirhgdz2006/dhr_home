@@ -1,4 +1,4 @@
-import { AppData, Category } from "./types";
+import { AppData, Category } from "@/types";
 import { reportError } from "../observability";
 
 const API_TEST_URL = import.meta.env.VITE_TEST_API_URL ?? "/api/data";
