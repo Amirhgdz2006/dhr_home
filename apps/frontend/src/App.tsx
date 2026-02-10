@@ -24,8 +24,7 @@ export default function App() {
         setCategories(categoriesData);
         setApps(appsData);
       } catch (err) {
-        console.error("Failed to fetch data:", err);
-        setError("خطا در بارگذاری اطلاعات");
+        throw err;
       } finally {
         setLoading(false);
       }

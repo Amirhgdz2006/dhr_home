@@ -9,7 +9,7 @@ export async function loadCategories(): Promise<Category[]> {
     return [...categoriesCache];
   } catch (error) {
     console.error("Failed to load categories:", error);
-    return [];
+    throw error;
   }
 }
 

@@ -9,7 +9,7 @@ export async function loadApps(): Promise<AppData[]> {
     return [...appsCache];
   } catch (error) {
     console.error("Failed to load apps:", error);
-    return [];
+    throw error;
   }
 }
 

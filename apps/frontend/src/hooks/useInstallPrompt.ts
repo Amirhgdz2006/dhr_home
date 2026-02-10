@@ -89,8 +89,7 @@ export function useInstallPrompt(): UseInstallPromptReturn {
 
       return false;
     } catch (error) {
-      console.error('Error showing install prompt:', error);
-      return false;
+      throw error;
     }
   };
 
@@ -100,4 +99,3 @@ export function useInstallPrompt(): UseInstallPromptReturn {
     promptInstall,
   };
 }
-

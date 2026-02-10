@@ -37,9 +37,7 @@ export function reportError(
   if (isSentryEnabled) {
     Sentry.captureException(error, context ? { extra: context } : undefined);
   } else {
-    // Fallback logging for development
-    // eslint-disable-next-line no-console
-    console.error("Captured error:", error, context);
+    throw error;
   }
 }
 
