@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, CSSProperties } from "react";
 import iconPaths from "../../../iconPaths";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { TIMING, KEYBOARD_SHORTCUTS } from "../../../../constants";
@@ -8,6 +8,8 @@ interface SearchboxProps {
   setSearchQuery: (q: string) => void;
   colors: AdaptiveColors;
 }
+
+const ICON_SIZE = 6; // Tailwind units (h-6 w-6)
 
 export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -26,11 +28,37 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
     }
   };
 
-  const getTextColor = () => {
+  const getTextColor = (): string => {
     if (isFocused || searchQuery.length > 0) return colors.textPrimary;
     if (isHovered) return colors.textSecondary;
     return colors.textTertiary;
   };
+
+  const getStrokeOpacity = (): string => {
+    if (isFocused || searchQuery.length > 0) return "1";
+    if (isHovered) return "0.85";
+    return "0.7";
+  };
+
+  const iconStyle: CSSProperties = {
+    "--stroke-0": getTextColor(),
+  } as CSSProperties;
+
+  const inputStyle: CSSProperties = {
+    color: getTextColor(),
+  };
+
+  const borderStyle: CSSProperties = {
+    borderStyle: "solid",
+    borderWidth: "0 0 0.5px 0",
+    borderColor: isFocused || searchQuery.length > 0 
+      ? colors.textPrimary 
+      : isHovered 
+        ? colors.textSecondary 
+        : colors.textTertiary,
+  };
+
+  const placeholderColor = isHovered ? colors.textSecondary : colors.textTertiary;
 
   return (
     <div
@@ -42,26 +70,21 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
     >
       <div className="flex w-full items-center overflow-hidden rounded-inherit">
         <div className="flex w-full items-center gap-2 p-2">
-          <div className="relative h-6 w-6 shrink-0">
-            <div
-              className="absolute inset-0"
-              style={
-                {
-                  "--stroke-0": getTextColor(),
-                } as React.CSSProperties
-              }
-            >
-              <svg className="block h-full w-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+          <div className={`relative h-${ICON_SIZE} w-${ICON_SIZE} shrink-0`}>
+            <div className="absolute inset-0" style={iconStyle}>
+              <svg 
+                className="block h-full w-full transition-all" 
+                fill="none" 
+                preserveAspectRatio="none" 
+                viewBox="0 0 20 20"
+              >
                 <path
                   d={iconPaths.p388bbe00}
                   stroke="var(--stroke-0, white)"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeOpacity={
-                    isFocused || searchQuery.length > 0 ? "1" : isHovered ? "0.85" : "0.7"
-                  }
+                  strokeOpacity={getStrokeOpacity()}
                   strokeWidth="2"
-                  className="transition-all"
                 />
               </svg>
             </div>
@@ -77,7 +100,7 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
             onKeyDown={handleKeyDown}
             placeholder="جستجو..."
             className="flex-1 bg-transparent border-none outline-none text-right text-[20px] font-medium font-['IRANYekanX']"
-            style={{ color: getTextColor() }}
+            style={inputStyle}
             dir="rtl"
           />
         </div>
@@ -85,7 +108,7 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
 
       <style>{`
         input::placeholder {
-          color: ${isHovered ? colors.textSecondary : colors.textTertiary} !important;
+          color: ${placeholderColor} !important;
           opacity: 1;
           transition: color 0.2s ease;
         }
@@ -94,16 +117,7 @@ export function Searchbox({ searchQuery, setSearchQuery, colors }: SearchboxProp
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 transition-all duration-200"
-        style={{
-          borderStyle: "solid",
-          borderWidth: "0 0 0.5px 0",
-          borderColor:
-            isFocused || searchQuery.length > 0
-              ? colors.textPrimary
-              : isHovered
-              ? colors.textSecondary
-              : colors.textTertiary,
-        }}
+        style={borderStyle}
       />
     </div>
   );

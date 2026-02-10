@@ -11,7 +11,7 @@ interface ApplicationsGridProps {
   categories: Category[];
 }
 
-const defaultColors: AdaptiveColors = {
+const DEFAULT_COLORS: AdaptiveColors = {
   isLight: false,
   isAnalyzed: true,
   panelBg: "rgba(255, 255, 255, 0.15)",
@@ -29,11 +29,23 @@ const defaultColors: AdaptiveColors = {
   scrollbarBg: "rgba(255, 255, 255, 0.4)",
 };
 
+const searchInApp = (app: AppData, searchLower: string): boolean => {
+  if (searchLower === "") return true;
+  
+  return (
+    app.name.includes(searchLower) ||
+    app.description.includes(searchLower) ||
+    (app.englishName?.toLowerCase().includes(searchLower)) ||
+    (app.keywords?.some((keyword) => keyword.toLowerCase().includes(searchLower)))
+  ) ?? false;
+};
+
 export function ApplicationsGrid({ imageSrc, apps, categories }: ApplicationsGridProps) {
   const isMobile = useIsMobile();
   const adaptiveColors = useAdaptiveColors(imageSrc || "");
+  
   const colors = useMemo(
-    () => (isMobile ? defaultColors : (adaptiveColors || defaultColors)),
+    () => (isMobile ? DEFAULT_COLORS : (adaptiveColors || DEFAULT_COLORS)),
     [isMobile, adaptiveColors]
   );
 
@@ -41,23 +53,23 @@ export function ApplicationsGrid({ imageSrc, apps, categories }: ApplicationsGri
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const filteredApps = useMemo(() => {
+    const searchLower = searchQuery.toLowerCase();
+    
     return apps.filter((app) => {
-      const searchLower = searchQuery.toLowerCase();
-      const matchesSearch =
-        searchQuery === "" ||
-        app.name.includes(searchQuery) ||
-        app.description.includes(searchQuery) ||
-        (app.englishName && app.englishName.toLowerCase().includes(searchLower)) ||
-        (app.keywords && app.keywords.some((k) => k.toLowerCase().includes(searchLower)));
-
-      const matchesCategory = isMobile ? true : selectedCategory === "" || app.category === selectedCategory;
+      const matchesSearch = searchInApp(app, searchLower);
+      const matchesCategory = isMobile 
+        ? true 
+        : selectedCategory === "" || app.category === selectedCategory;
+      
       return matchesSearch && matchesCategory;
     });
   }, [apps, searchQuery, selectedCategory, isMobile]);
 
   const groupedApps = useMemo(() => {
     return filteredApps.reduce((acc, app) => {
-      if (!acc[app.category]) acc[app.category] = [];
+      if (!acc[app.category]) {
+        acc[app.category] = [];
+      }
       acc[app.category].push(app);
       return acc;
     }, {} as Record<string, AppData[]>);

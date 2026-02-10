@@ -8,6 +8,12 @@ interface ScrollbarState {
   clientHeight: number;
 }
 
+const updateScrollMetrics = (element: HTMLDivElement): Omit<ScrollbarState, 'isScrollbarVisible'> => ({
+  scrollPosition: element.scrollTop,
+  scrollHeight: element.scrollHeight,
+  clientHeight: element.clientHeight,
+});
+
 export function useScrollbar(scrollRef: RefObject<HTMLDivElement>): ScrollbarState {
   const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -16,32 +22,38 @@ export function useScrollbar(scrollRef: RefObject<HTMLDivElement>): ScrollbarSta
   const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
+    const scrollElement = scrollRef.current;
+    if (!scrollElement) return;
+
     const handleScroll = () => {
-      const scrollElement = scrollRef.current;
-      if (!scrollElement) return;
+      const metrics = updateScrollMetrics(scrollElement);
       
-      setScrollPosition(scrollElement.scrollTop);
-      setScrollHeight(scrollElement.scrollHeight);
-      setClientHeight(scrollElement.clientHeight);
+      setScrollPosition(metrics.scrollPosition);
+      setScrollHeight(metrics.scrollHeight);
+      setClientHeight(metrics.clientHeight);
       setIsScrollbarVisible(true);
 
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(
-        () => setIsScrollbarVisible(false),
-        TIMING.SCROLLBAR_HIDE_DELAY
-      );
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrollbarVisible(false);
+      }, TIMING.SCROLLBAR_HIDE_DELAY);
     };
 
-    const el = scrollRef.current;
-    if (el) {
-      setScrollHeight(el.scrollHeight);
-      setClientHeight(el.clientHeight);
-      el.addEventListener("scroll", handleScroll);
-    }
+    // Initialize metrics
+    const initialMetrics = updateScrollMetrics(scrollElement);
+    setScrollHeight(initialMetrics.scrollHeight);
+    setClientHeight(initialMetrics.clientHeight);
+    
+    scrollElement.addEventListener("scroll", handleScroll);
 
     return () => {
-      if (el) el.removeEventListener("scroll", handleScroll);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollElement.removeEventListener("scroll", handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
     };
   }, [scrollRef]);
 

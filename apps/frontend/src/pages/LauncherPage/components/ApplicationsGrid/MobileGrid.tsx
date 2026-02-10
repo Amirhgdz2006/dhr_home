@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, CSSProperties } from "react";
 import { AppData } from "../../../data/types";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { AppListItem } from "../App/AppListItem";
@@ -11,8 +11,68 @@ interface MobileGridProps {
   colors: AdaptiveColors;
 }
 
-export function MobileGrid({ groupedApps, searchQuery, setSearchQuery, colors }: MobileGridProps) {
+const GRID_CONFIG = {
+  padding: {
+    horizontal: 16, // px-4
+    vertical: {
+      top: 24, // pt-6
+      bottom: 16, // pb-4
+    },
+  },
+} as const;
+
+export function MobileGrid({ 
+  groupedApps, 
+  searchQuery, 
+  setSearchQuery, 
+  colors 
+}: MobileGridProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const hasResults = Object.entries(groupedApps).length > 0;
+
+  const emptyStateTextStyle: CSSProperties = {
+    color: colors.textTertiary,
+    textShadow: colors.textShadow || (colors.isLight ? "none" : "0 1px 2px rgba(0,0,0,0.3)"),
+  };
+
+  const categoryTitleStyle: CSSProperties = {
+    color: colors.textPrimary,
+    textShadow: colors.textShadow || (colors.isLight ? "none" : "0 1px 2px rgba(0,0,0,0.3)"),
+  };
+
+  const renderEmptyState = () => (
+    <div className="pt-6 text-center">
+      <p
+        className="font-['IRANYekanX'] text-base"
+        style={emptyStateTextStyle}
+        dir="rtl"
+      >
+        نتیجه‌ای یافت نشد
+      </p>
+    </div>
+  );
+
+  const renderCategory = (category: string, categoryApps: AppData[]) => (
+    <div key={category} className="w-full">
+      <div className="pt-6 pb-4">
+        <p
+          className="font-['IRANYekanX'] font-bold text-right text-[32px] opacity-50"
+          style={categoryTitleStyle}
+          dir="rtl"
+        >
+          {category}
+        </p>
+      </div>
+
+      {categoryApps.map((app) => (
+        <AppListItem 
+          key={app.name} 
+          app={app} 
+          colors={colors} 
+        />
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -21,41 +81,12 @@ export function MobileGrid({ groupedApps, searchQuery, setSearchQuery, colors }:
         className="flex-1 overflow-y-auto touch-auto w-screen pb-4"
       >
         <div className="w-full px-4">
-          {Object.entries(groupedApps).length === 0 ? (
-            <div className="pt-6 text-center">
-              <p
-                className="font-['IRANYekanX'] text-base"
-                style={{
-                  color: colors.textTertiary,
-                  textShadow: colors.textShadow || (colors.isLight ? "none" : "0 1px 2px rgba(0,0,0,0.3)"),
-                }}
-                dir="rtl"
-              >
-                نتیجه‌ای یافت نشد
-              </p>
-            </div>
-          ) : (
-            Object.entries(groupedApps).map(([category, categoryApps]) => (
-              <div key={category} className="w-full">
-                <div className="pt-6 pb-4">
-                  <p
-                    className="font-['IRANYekanX'] font-bold text-right text-[32px] opacity-50"
-                    style={{
-                      color: colors.textPrimary,
-                      textShadow: colors.textShadow || (colors.isLight ? "none" : "0 1px 2px rgba(0,0,0,0.3)"),
-                    }}
-                    dir="rtl"
-                  >
-                    {category}
-                  </p>
-                </div>
-
-                {categoryApps.map((app) => (
-                  <AppListItem key={app.name} app={app} colors={colors} />
-                ))}
-              </div>
-            ))
-          )}
+          {!hasResults 
+            ? renderEmptyState() 
+            : Object.entries(groupedApps).map(([category, apps]) => 
+                renderCategory(category, apps)
+              )
+          }
         </div>
       </div>
 
