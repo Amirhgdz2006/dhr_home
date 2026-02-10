@@ -1,6 +1,6 @@
 import { useState, useRef, CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { AppData, Category } from "@/types";
+import { IAppData, ICategory } from "@/types";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { useScrollbar } from "../../hooks/useScrollbar";
 import { Searchbox } from "../Search/Searchbox";
@@ -13,8 +13,8 @@ import { TIMING, URLS } from "../../../../constants";
 import { resolveIconUrl } from "../../utils/resolveIconUrl";
 
 interface DesktopGridProps {
-  groupedApps: Record<string, AppData[]>;
-  categories: Category[];
+  groupedApps: Record<string, IAppData[]>;
+  categories: ICategory[];
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   selectedCategory: string;
@@ -86,13 +86,13 @@ export function DesktopGrid({
   setSelectedCategory,
   colors,
 }: DesktopGridProps) {
-  const [hoveredApp, setHoveredApp] = useState<AppData | null>(null);
+  const [hoveredApp, setHoveredApp] = useState<IAppData | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   
   const { isScrollbarVisible, scrollPosition, scrollHeight, clientHeight } = useScrollbar(scrollRef);
 
-  const handleAppHover = (app: AppData) => {
+  const handleAppHover = (app: IAppData) => {
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -167,7 +167,7 @@ export function DesktopGrid({
     </div>
   );
 
-  const renderAppRow = (row: AppData[], rowIndex: number) => (
+  const renderAppRow = (row: IAppData[], rowIndex: number) => (
     <div key={rowIndex} className="relative w-full">
       <div className="overflow-visible">
         <div className="flex gap-2 py-0 w-full overflow-visible" style={{ direction: "rtl" }}>
@@ -191,11 +191,11 @@ export function DesktopGrid({
 
   const renderCategoryGroup = (
     category: string, 
-    apps: AppData[], 
+    apps: IAppData[], 
     categoryIndex: number, 
     totalCategories: number
   ) => {
-    const rows: AppData[][] = [];
+    const rows: IAppData[][] = [];
     for (let i = 0; i < apps.length; i += GRID_CONFIG.appsPerRow) {
       rows.push(apps.slice(i, i + GRID_CONFIG.appsPerRow));
     }

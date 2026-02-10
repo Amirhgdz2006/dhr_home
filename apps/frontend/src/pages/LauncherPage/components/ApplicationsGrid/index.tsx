@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { AppData, Category } from "@/types";
+import { IAppData, ICategory } from "@/types";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { useAdaptiveColors, AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { MobileGrid } from "./MobileGrid";
@@ -7,8 +7,8 @@ import { DesktopGrid } from "./DesktopGrid";
 
 interface ApplicationsGridProps {
   imageSrc: string;
-  apps: AppData[];
-  categories: Category[];
+  apps: IAppData[];
+  categories: ICategory[];
 }
 
 const DEFAULT_COLORS: AdaptiveColors = {
@@ -29,7 +29,7 @@ const DEFAULT_COLORS: AdaptiveColors = {
   scrollbarBg: "rgba(255, 255, 255, 0.4)",
 };
 
-const searchInApp = (app: AppData, searchLower: string): boolean => {
+const searchInApp = (app: IAppData, searchLower: string): boolean => {
   if (searchLower === "") return true;
   
   return (
@@ -72,7 +72,7 @@ export function ApplicationsGrid({ imageSrc, apps, categories }: ApplicationsGri
       }
       acc[app.category].push(app);
       return acc;
-    }, {} as Record<string, AppData[]>);
+    }, {} as Record<string, IAppData[]>);
   }, [filteredApps]);
 
   const handleSearchChange = useCallback((query: string) => {

@@ -1,9 +1,9 @@
-import { AppData } from "@/types";
+import { IAppData } from "@/types";
 import { fetchAppsFromStrapi } from "./api";
 
-let appsCache: AppData[] = [];
+let appsCache: IAppData[] = [];
 
-export async function loadApps(): Promise<AppData[]> {
+export async function loadApps(): Promise<IAppData[]> {
   try {
     appsCache = await fetchAppsFromStrapi();
     return [...appsCache];
@@ -13,6 +13,6 @@ export async function loadApps(): Promise<AppData[]> {
   }
 }
 
-export function getApps(): AppData[] {
+export function getApps(): IAppData[] {
   return [...appsCache];
 }

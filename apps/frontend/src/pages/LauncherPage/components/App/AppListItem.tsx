@@ -1,11 +1,11 @@
 import { CSSProperties } from "react";
-import { AppData } from "@/types";
+import { IAppData } from "@/types";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { resolveIconUrl } from "../../utils/resolveIconUrl";
 import { PlaceholderIcon } from "../UI/PlaceholderIcon";
 
 interface AppListItemProps {
-  app: AppData;
+  app: IAppData;
   colors: AdaptiveColors;
 }
 

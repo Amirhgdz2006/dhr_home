@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export interface AppData {
+export interface IAppData {
   name: string;
   englishName?: string;
   keywords?: string[];
@@ -11,25 +11,25 @@ export interface AppData {
   url: string;
 }
 
-export interface Category {
+export interface ICategory {
   id: string;
   name: string;
   order?: number;
 }
 
-export interface APIResponse<T> {
+export interface IAPIResponse<T> {
   data: T;
   error?: string;
   status: number;
 }
 
-export interface BackendCategory {
+export interface IBackendCategory {
   name: string;
   order?: number;
-  apps?: BackendApp[];
+  apps?: IBackendApp[];
 }
 
-export interface BackendApp {
+export interface IBackendApp {
   name: string;
   englishName?: string;
   keywords?: string[];
@@ -39,11 +39,11 @@ export interface BackendApp {
   url: string;
 }
 
-export type LoadingState = "idle" | "loading" | "success" | "error";
+export type ILoadingState = "idle" | "loading" | "success" | "error";
 
-export interface AppState {
-  apps: AppData[];
-  categories: Category[];
-  loading: LoadingState;
+export interface IAppState {
+  apps: IAppData[];
+  categories: ICategory[];
+  loading: ILoadingState;
   error: string | null;
 }

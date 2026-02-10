@@ -1,11 +1,11 @@
 import { useRef, CSSProperties } from "react";
-import { AppData } from "@/types";
+import { IAppData } from "@/types";
 import { AdaptiveColors } from "../../hooks/useAdaptiveColors";
 import { AppListItem } from "../App/AppListItem";
 import { MobileSearchBar } from "../Search/MobileSearchBar";
 
 interface MobileGridProps {
-  groupedApps: Record<string, AppData[]>;
+  groupedApps: Record<string, IAppData[]>;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   colors: AdaptiveColors;
@@ -42,7 +42,7 @@ export function MobileGrid({
     </div>
   );
 
-  const renderCategory = (category: string, categoryApps: AppData[]) => (
+  const renderCategory = (category: string, categoryApps: IAppData[]) => (
     <div key={category} className="w-full">
       <div className="pt-6 pb-4">
         <p

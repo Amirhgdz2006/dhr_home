@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import LauncherPage from "./pages/LauncherPage";
-import { AppData, Category } from "@/types";
+import { IAppData, ICategory } from "@/types";
 import { loadApps } from "./data/apps";
 import { loadCategories } from "./data/categories";
 
 export default function App() {
-  const [apps, setApps] = useState<AppData[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [apps, setApps] = useState<IAppData[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

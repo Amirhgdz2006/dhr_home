@@ -1,9 +1,9 @@
-import { Category } from "@/types";
+import { ICategory } from "@/types";
 import { fetchCategoriesFromStrapi } from "./api";
 
-let categoriesCache: Category[] = [];
+let categoriesCache: ICategory[] = [];
 
-export async function loadCategories(): Promise<Category[]> {
+export async function loadCategories(): Promise<ICategory[]> {
   try {
     categoriesCache = await fetchCategoriesFromStrapi();
     return [...categoriesCache];
@@ -13,7 +13,7 @@ export async function loadCategories(): Promise<Category[]> {
   }
 }
 
-export function getCategories(): Category[] {
+export function getCategories(): ICategory[] {
   return [...categoriesCache];
 }
 

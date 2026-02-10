@@ -1,4 +1,4 @@
-import { AppData, Category } from "@/types";
+import { IAppData, ICategory } from "@/types";
 import { reportError } from "../observability";
 
 const API_TEST_URL = import.meta.env.VITE_TEST_API_URL ?? "/api/data";
@@ -12,7 +12,7 @@ class APIError extends Error {
   }
 }
 
-export async function fetchCategoriesFromStrapi(): Promise<Category[]> {
+export async function fetchCategoriesFromStrapi(): Promise<ICategory[]> {
   try {
     const response = await fetch(API_TEST_URL);
 
@@ -48,7 +48,7 @@ export async function fetchCategoriesFromStrapi(): Promise<Category[]> {
   }
 }
 
-export async function fetchAppsFromStrapi(): Promise<AppData[]> {
+export async function fetchAppsFromStrapi(): Promise<IAppData[]> {
   try {
     const response = await fetch(API_TEST_URL);
 
@@ -65,7 +65,7 @@ export async function fetchAppsFromStrapi(): Promise<AppData[]> {
       throw new APIError("Invalid response format: missing data array");
     }
 
-    const apps: AppData[] = [];
+    const apps: IAppData[] = [];
 
     json.data.forEach((category: {
       name: string;
@@ -82,7 +82,7 @@ export async function fetchAppsFromStrapi(): Promise<AppData[]> {
       const categoryName = category.name;
       const categoryApps =
         category.apps?.map(
-          (app): AppData => ({
+          (app): IAppData => ({
             name: app.name,
             englishName: app.englishName,
             keywords: app.keywords ?? [],
